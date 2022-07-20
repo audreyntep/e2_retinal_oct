@@ -12,3 +12,4 @@ apps = DispatcherMiddleware(app_web, {'/api': app_api})
 # Lancement de l'application
 if __name__ == '__main__':
     run_simple('127.0.0.1', 5000, apps, use_reloader=True, use_debugger=True, use_evalex=True, threaded=True)
+    

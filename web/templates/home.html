@@ -35,29 +35,50 @@
                 </ul>
 
             <div class="col col-left">
-                <h3>1. Load an OCT image</h3>
-                <form action="" method="post" class="form" id="form1">
-                    <button class="btn" id="load" type="submit">Load</button>
+                <h3>1. Upload an OCT image</h3>
+
+                <form enctype ="multipart/form-data" action="" method="post" class="form">
+                    <label for="oct_file">                   
+                        <input type="file"
+                        id="oct_file" name="oct_file"
+                        accept="image/png, image/jpeg">
+                    </label>
+                    <button class="btn" type="submit">Upload</button>
                 </form>
+                
                 <div class="image">
-                    <img id="oct" src="{{ url_for('static', filename='img/no_image.jpg') }}" alt="oct_image">
+                    {% if oct_image %}
+                    {{oct_image.name}}
+                    <img src="{{oct_image.url}}" alt="{{oct_image.name}}">
+                    {% else %}
+                    <img src="{{url_for('static', filename='img/no_image.jpg')}}" alt="no_oct_image">
+                    {% endif %}
                 </div>
             </div>
 
             <div class="col col-right">
                 <h3>2. Get a diagnosis</h3>
-                <form action="" method="post" class="form" id="form2">
-                    <button class="btn" id="predict" type="submit">Diagnose</button>
+                <form action="" method="post" class="form">
+                    {% if oct_image %}
+                    <input type="hidden" name="diagnose" value="{{oct_image.url}}">
+                    {% endif %}
+                    <button class="btn" type="submit">Diagnose</button>
                 </form>
-                <div class="diagnosis">{{diagnosis}}</div>
-                <div>
-                    <p class="caution">
-                        <strong>Caution : </strong>
-                        This diagnosis must be considered with care.
-                        <br>It is reliable at {{reliability}} % and should always be confirmed by human observation.
-                    </p>
+                <div class="diagnosis">
+                    {% if diagnosis %}
+                    <div>{{diagnosis.result}} RETINA</div>
+                    <img src="{{diagnosis.url}}" alt="{{diagnosis.filename}}">
+                    {{diagnosis.error}}
+                    {% endif %}
                 </div>
             </div>
+
+            <p class="caution">
+                <strong>Caution : </strong>
+                This diagnosis must be considered with care.
+                <br>It is reliable at {{reliability}} % and should always be confirmed by human observation.
+            </p>
+
         </main>
         <footer>
             © 2022 MedTech - Audrey NTEP
