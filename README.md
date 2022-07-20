@@ -1,28 +1,19 @@
-# AUTOCCAZ
-## IA au service de l'automobile
+# RetinAI web application
+## Retinal Diagnosis by Image-Based Deep Learning
 
 
-### Installation des dépendances du projet
+### 1. Install dependencies
 
-pip install requirements.txt
+<code>pip install requirements.txt</code>
 
-### Lancement de l'api et du website
+### 2. Launch flask server with powershell
 
-$ env:FLASK_APP= "main"
+<code>$ env:FLASK_APP= "main"</code>
 
-$ falsk run
+<code>$ flask run</code>
 
-### URL
+### 3. Access web app with navigator
 
-- website : 'http:localhost:5000/web'
+- website : 'http:localhost:5000/'
 
-- api : 'http:localhost:5000/'
-
-- prediction avec random forest : 'http:localhost:5000/randomForest'
-GET : retourne la liste des catégories pour les variables 'Marque', 'Carburant' et 'Transmission'
-POST : prend en paramètre 'brand' (une catégorie de Marque), 'year' (année au format AAAA), 'fuel' (une catégorie de Carburant), 'location' (Code du département) et 'kimometers' (nombre entier) puis retourne une prédiction (nombre entier)
-
-
-- prediction avec arbre de décision : 'http:localhost:5000/decisionTree'
-GET : retourne la liste des catégories pour les variables 'Marque', 'Carburant' et 'Transmission'
-POST : prend en paramètre 'year' (année au format AAAA), 'door' (le nombre de porte : 4 ou 5), 'seat' (le nombre de place : 3 ou 4) et 'kimometers' (nombre entier) puis retourne un id de prédiction stocké en BDD (nombre entier)
+- api : 'http:localhost:5000/api'

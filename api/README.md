@@ -6,3 +6,6 @@ Retinal Optical Coherence Tomography (OCT) is an imaging technique used to captu
 - Citation: http://www.cell.com/cell/fulltext/S0092-8674(18)30154-5
 
 A VGG16 CNN architecture is used for calssification pretrained on the 'ImageNet' dataset. The full code is available here https://colab.research.google.com/drive/1UzymPZ7DOG9JO2nOEA4IndMaed1kzQyK?usp=sharing
+
+## API Consumption
+
