@@ -18,6 +18,10 @@ def create_app():
 
     return app
 
+def get_model():
+    r = requests.get(url='http://127.0.0.1:5000/api')
+    return r.json()
+
 @views.route('/', methods=['GET','POST'])
 def home():
 
@@ -27,8 +31,8 @@ def home():
         ('drusen'), 
         ('normal')
     ]
-    accuracy=90.50
-    diagnosis={}
+    accuracy=round(get_model().get('accuracy')*100,2)
+    print(type(accuracy))
 
     # prepare file
     if 'oct_file' in request.files and request.files.get('oct_file'):
@@ -47,6 +51,9 @@ def home():
         return render_template("home.html", categories=categories, accuracy=str(accuracy), oct_image=oct_image)
 
     if request.method  == 'POST':
+
+        diagnosis={}
+
         if 'diagnose' in request.form:
 
             # send image to api for diagnosis

@@ -12,7 +12,6 @@ mimetypes.add_type('text/javascript', '.js')
 
 app_web = create_app_website()
 app_api = create_app_api()
-
 apps = DispatcherMiddleware(app_web, {'/api': app_api})
 
 # Lancement de l'application

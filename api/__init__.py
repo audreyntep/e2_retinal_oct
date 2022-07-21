@@ -1,14 +1,14 @@
-import io, os, requests
-from pathlib import Path
+import os, json
 from re import I
 import numpy as np
 import tensorflow as tf
 from PIL import Image
 from flask import Flask, jsonify, request
-from flask_restful import Api, reqparse, abort, Resource
-from keras.preprocessing import image
-from keras.initializers import glorot_uniform
+from flask_restful import Api, Resource
 
+# define model to use
+global model_name
+model_name = 'vE10-B64'
 
 def create_app():
     app = Flask('api')
@@ -22,8 +22,34 @@ def create_app():
 
     # Define route with Resource
     api.add_resource(Prediction, '/')
+    api.add_resource(Model, '/model')
 
     return app
+    
+
+class Model(Resource):
+
+    def __init__(self) -> None:
+        super().__init__()
+
+    # model paths
+    model_h5_path = 'retinal_oct_model_'+model_name+'.h5'
+    model_json_path = 'retinal_oct_model_'+model_name+'.json'
+
+    # return keras model
+    def load_model(self):
+        # getting h5 path
+        model_h5 = os.getcwd()+'/api/model/'+model_name+'/'+self.model_h5_path
+        # loading model with kears
+        model = tf.keras.models.load_model(model_h5)
+        model.compile(optimizer = 'adam', loss = 'categorical_crossentropy', metrics = ['accuracy'])
+
+        return model
+
+    # return json
+    def data_model(self):
+        data = open(os.getcwd()+'/api/model/'+model_name+'/'+self.model_json_path)
+        return json.load(data)
 
 
 # POST methode retourne un diagnostic
@@ -37,13 +63,6 @@ class Prediction(Resource):
     }
 
     filename = ''
-
-    def load_model(self):
-
-        model = tf.keras.models.load_model(os.getcwd()+'\\api\\model\\retinal-oct-v100_1000.h5')
-        model.compile(optimizer = 'adam', loss = 'categorical_crossentropy', metrics = ['accuracy'])
-
-        return model
 
     # Filestorage as input, Image object as output
     def prepare_image(self, file):
@@ -68,9 +87,11 @@ class Prediction(Resource):
 
         return img
 
+    # Image object as input, return numpy array prediction
     def predict_result(self,img):
-        Y_pred = self.load_model().predict(img)
+        Y_pred = Model().load_model().predict(img)
         return np.argmax(Y_pred, axis=1)
+
 
     # POST method retun diagnosis in json
     def post(self):
@@ -91,6 +112,8 @@ class Prediction(Resource):
         # return diagnosis as json
         return jsonify(diagnosis={'filename': self.filename, 'result': self.categories.get(int(result[0]))})
     
-    # GET method
+
+    # GET method return model architecture and metrics as json
     def get(self):
-        return 'Retinal Diagnosis by Image-Based Deep Learning'
+        #return 'Retinal Diagnosis by Image-Based Deep Learning'
+        return Model().data_model()

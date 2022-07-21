@@ -149,10 +149,12 @@ tr {
   padding:5px;
   margin: 10px;
   border-radius: 5px;
+  text-align: center;
+}
+.diagnosis div span {
   color: darkblue;
   font-weight: bold;
   text-transform: uppercase;
-  text-align: center;
 }
 .image {
   grid-row: 3/-1;

@@ -38,7 +38,7 @@
                     <label for="oct_file" id="browser">                   
                         <input type="file"
                         id="oct_file" name="oct_file"
-                        accept="image/png, image/jpeg">
+                        accept="image/png, image/jpeg" title="Please select JPEG or PNG file" placeholder="">
                     </label>
                     <button id="btn_upload" class="btn" type="submit">Upload</button>
                 </form>
@@ -61,7 +61,8 @@
                 </form>
                 <div class="diagnosis">
                     {% if diagnosis %}
-                    <div>{{diagnosis.result + ' RETINA'}}</div>
+                    <div>Result : <span>{{diagnosis.result + ' RETINA'}}</span></div>
+                    <div>Filename : <span>{{diagnosis.filename}}</span></div>
                     <img id="oct_image_diagnose" src="{{diagnosis.url}}" alt="{{diagnosis.filename}}">
                     {% endif %}
                 </div>
