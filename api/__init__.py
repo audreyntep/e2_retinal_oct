@@ -7,6 +7,7 @@ from PIL import Image
 from flask import Flask, jsonify, request
 from flask_restful import Api, reqparse, abort, Resource
 from keras.preprocessing import image
+from keras.initializers import glorot_uniform
 
 
 def create_app():
@@ -27,10 +28,7 @@ def create_app():
 
 # POST methode retourne un diagnostic
 class Prediction(Resource):
-
-    # loading model
-    model = tf.keras.models.load_model(os.getcwd()+'\\api\\model\\retinal-oct.h5')
-
+    
     categories = {
         0 :'choroidal neovascularization', 
         1 :'diabetic macular edema', 
@@ -39,6 +37,13 @@ class Prediction(Resource):
     }
 
     filename = ''
+
+    def load_model(self):
+
+        model = tf.keras.models.load_model(os.getcwd()+'\\api\\model\\retinal-oct-v100_1000.h5')
+        model.compile(optimizer = 'adam', loss = 'categorical_crossentropy', metrics = ['accuracy'])
+
+        return model
 
     # Filestorage as input, Image object as output
     def prepare_image(self, file):
@@ -64,14 +69,11 @@ class Prediction(Resource):
         return img
 
     def predict_result(self,img):
-        Y_pred = self.model.predict(img)
+        Y_pred = self.load_model().predict(img)
         return np.argmax(Y_pred, axis=1)
 
     # POST method retun diagnosis in json
     def post(self):
-
-        # prepare model
-        self.model.compile(optimizer = 'adam', loss = 'categorical_crossentropy', metrics = ['accuracy'])
 
         # prepare file
         if 'file' not in request.files:

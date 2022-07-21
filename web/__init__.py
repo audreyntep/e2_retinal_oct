@@ -22,12 +22,12 @@ def create_app():
 def home():
 
     categories = [
-        (0,'CNV : choroidal neovascularization'), 
-        (1,'DME : diabetic macular edema'), 
-        (2,'DRUSEN'), 
-        (3,'NORMAL')
+        ('choroidal neovascularization (CNV)'), 
+        ('diabetic macular edema (DME)'), 
+        ('drusen'), 
+        ('normal')
     ]
-    reliability=87
+    accuracy=90.50
     diagnosis={}
 
     # prepare file
@@ -44,12 +44,11 @@ def home():
             'name': file.filename,
             'url' : url_for('static', filename='oct_image/'+file.filename)
         }
-        return render_template("home.html", categories=categories, reliability=reliability, diagnosis=diagnosis, oct_image=oct_image)
+        return render_template("home.html", categories=categories, accuracy=str(accuracy), oct_image=oct_image)
 
     if request.method  == 'POST':
         if 'diagnose' in request.form:
-            print(request.form.get('diagnose'))
-            print(__file__)
+
             # send image to api for diagnosis
             r = requests.post(
                 url='http://127.0.0.1:5000/api', 
@@ -61,10 +60,10 @@ def home():
             diagnosis = r.json().get('diagnosis') if r.ok else ''
             if diagnosis != '':
                 diagnosis['url'] = url_for('static', filename='oct_image/'+diagnosis.get('filename'))
-        else:
-            diagnosis['error'] = "Please upload OCT image"
+            
+            return render_template("home.html", categories=categories, accuracy=str(accuracy), diagnosis=diagnosis)
 
-    return render_template("home.html", categories=categories, reliability=reliability, diagnosis=diagnosis)
+    return render_template("home.html", categories=categories, accuracy=str(accuracy))
 
 
 

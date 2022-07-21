@@ -27,12 +27,9 @@
 
         <main class="container">
             <h2>Retinal Diagnosis by Image-Based Deep Learning</h2>
-            <p class="cat">This CNN can classify OCT images in 4 categories :</p>
-                <ul>
-                    {% for category in categories %}     
-                    <li >{{category[1]}}</li>
-                    {% endfor %}
-                </ul>
+            <p class="cat">This CNN can classify OCT images in 4 categories :
+                {% for category in categories %}{{category}}, {% endfor %}
+            </p>
 
             <div class="col col-left">
                 <h3>1. Upload an OCT image</h3>
@@ -50,8 +47,6 @@
                     {% if oct_image %}
                     {{oct_image.name}}
                     <img src="{{oct_image.url}}" alt="{{oct_image.name}}">
-                    {% else %}
-                    <img src="{{url_for('static', filename='img/no_image.jpg')}}" alt="no_oct_image">
                     {% endif %}
                 </div>
             </div>
@@ -66,9 +61,8 @@
                 </form>
                 <div class="diagnosis">
                     {% if diagnosis %}
-                    <div>{{diagnosis.result}} RETINA</div>
+                    <div>{{diagnosis.result + ' RETINA'}} </div>
                     <img src="{{diagnosis.url}}" alt="{{diagnosis.filename}}">
-                    {{diagnosis.error}}
                     {% endif %}
                 </div>
             </div>
@@ -76,7 +70,7 @@
             <p class="caution">
                 <strong>Caution : </strong>
                 This diagnosis must be considered with care.
-                <br>It is reliable at {{reliability}} % and should always be confirmed by human observation.
+                <br>It is accurate at {{accuracy}}% and should always be confirmed by human observation.
             </p>
 
         </main>
