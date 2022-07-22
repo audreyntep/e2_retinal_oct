@@ -48,13 +48,13 @@ Windows configuration
 
     | Type | Params | Values |
     |:-----|:-------|:-------|
-    | POST | files | [{'file': <file1>}, {'file': <file2>}] |
+    | POST | files | [{'file': *< file1 >*}, {'file': *< file2 >*}] |
 
 
     Response :
 
     | Status | Response |
     |:-----|:-------|
-    | 200 | { "diagnosis": [{"filename": <string>,"result": <integer>,"classes":<string>}] } |
+    | 200 | { "diagnosis": [{"filename": *< string >*,"result": *< integer >*,"classes":*< string >*}] } |
     | 204 | File not found or no file received |
 
