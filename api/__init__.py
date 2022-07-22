@@ -1,5 +1,6 @@
 import os, json
 from re import I
+from json import JSONEncoder
 import numpy as np
 import tensorflow as tf
 from PIL import Image
@@ -23,14 +24,20 @@ def create_app():
     # Define route with Resource
     api.add_resource(Prediction, '/')
     api.add_resource(Model, '/model')
+    api.add_resource(Metrics, '/metrics')
+    api.add_resource(Diagnosis, '/classes')
 
     return app
+
+class Metrics(Resource):
+
+    # return json
+    def get(self):
+        data = open(os.getcwd()+'/api/model/'+model_name+'/retinal_oct_model_'+model_name+'_eval.json')
+        return json.load(data)
     
 
 class Model(Resource):
-
-    def __init__(self) -> None:
-        super().__init__()
 
     # model paths
     model_h5_path = 'retinal_oct_model_'+model_name+'.h5'
@@ -47,22 +54,25 @@ class Model(Resource):
         return model
 
     # return json
-    def data_model(self):
+    def get(self):
         data = open(os.getcwd()+'/api/model/'+model_name+'/'+self.model_json_path)
         return json.load(data)
 
 
-# POST methode retourne un diagnostic
-class Prediction(Resource):
-    
-    categories = {
-        0 :'choroidal neovascularization', 
-        1 :'diabetic macular edema', 
+
+class Diagnosis(Resource):
+
+    classes = {
+        0 :'choroidal neovascularization (CNV)', 
+        1 :'diabetic macular edema (DME)', 
         2 :'drusen', 
         3 :'normal'
     }
 
     filename = ''
+
+    def get_filename(self):
+        return self.filename
 
     # Filestorage as input, Image object as output
     def prepare_image(self, file):
@@ -92,28 +102,49 @@ class Prediction(Resource):
         Y_pred = Model().load_model().predict(img)
         return np.argmax(Y_pred, axis=1)
 
+    # Filestorage as input, return dict
+    def get_result(self, file):
+        # parameter byte object
+        img = self.prepare_image(file)
+        # transform result nd numpy array to list
+        result = np.ndarray.tolist(self.predict_result(img))
+
+        # format diagnosis
+        return {
+            'filename': self.filename, 
+            'result': json.dumps(result[0]),
+            'classe': self.classes.get(int(result[0]))
+            }
+
+    # return json
+    def get(self):
+        return jsonify(self.classes)
+
+
+# POST methode retourne un diagnostic
+class Prediction(Resource):
 
     # POST method retun diagnosis in json
     def post(self):
 
+        diagnoses = []
+
         # prepare file
-        if 'file' not in request.files:
-            return "Please try again. The Image doesn't exist"
-        file = request.files.get('file')
+        if len(request.files.getlist('file')) < 1 :
+            return {204 : "Please try again. The Image doesn't exist"}
+        files = request.files.getlist('file')
 
-        # prepare image
-        if not file:
-            return
-        img = self.prepare_image(file)
+        if not files:
+            return {204 : "Please try again. The Image doesn't exist"}
 
-        # return result as numpy int64
-        result = self.predict_result(img)
+        for f in files :
+            diagnoses.append(Diagnosis().get_result(f))
 
         # return diagnosis as json
-        return jsonify(diagnosis={'filename': self.filename, 'result': self.categories.get(int(result[0]))})
+        return jsonify(diagnosis=diagnoses)
     
 
     # GET method return model architecture and metrics as json
     def get(self):
-        #return 'Retinal Diagnosis by Image-Based Deep Learning'
-        return Model().data_model()
+        return 'Retinal Diagnosis by Image-Based Deep Learning'
+        

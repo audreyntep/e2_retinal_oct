@@ -1,6 +1,5 @@
 from re import U
 import os
-from pathlib import Path
 from flask import Flask, Blueprint, render_template, request, url_for
 import requests
 from PIL import Image
@@ -19,58 +18,85 @@ def create_app():
     return app
 
 def get_model():
-    r = requests.get(url='http://127.0.0.1:5000/api')
+    r = requests.get(url='http://127.0.0.1:5000/api/model')
     return r.json()
+
+def get_metrics():
+    r = requests.get(url='http://127.0.0.1:5000/api/metrics')
+    return r.json()
+
+def get_classes():
+    r = requests.get(url='http://127.0.0.1:5000/api/classes')
+    return r.json()
+
+def get_color(key):
+    color = {
+        0 : 'firebrick',
+        1 : 'firebrick',
+        2 : 'orangered',
+        3 : 'forestgreen'
+     }
+    if key in color.keys() :
+        return color.get(key)
+
 
 @views.route('/', methods=['GET','POST'])
 def home():
 
-    categories = [
-        ('choroidal neovascularization (CNV)'), 
-        ('diabetic macular edema (DME)'), 
-        ('drusen'), 
-        ('normal')
-    ]
-    accuracy=round(get_model().get('accuracy')*100,2)
-    print(type(accuracy))
+    # get CNN classes
+    classes = []
+    for c in get_classes().values():
+        classes.append(c)
+
+    # get CNN accuracy
+    accuracy=round(get_metrics().get('accuracy')*100,2)
 
     # prepare file
     if 'oct_file' in request.files and request.files.get('oct_file'):
-        file = request.files.get('oct_file')
 
-        # open image
-        img = Image.open(file.stream)
+        files = request.files.getlist('oct_file')
+        oct_images = []
 
-        # save image
-        img.save('web/static/oct_image/'+file.filename)
+        for file in files:
+            # open image
+            img = Image.open(file.stream)
+            # save image
+            img.save('web/static/oct_image/'+file.filename)
+            # store data to show image
+            oct_images.append({
+                'name': file.filename,
+                'url' : url_for('static', filename='oct_image/'+file.filename)
+            })
 
-        oct_image={
-            'name': file.filename,
-            'url' : url_for('static', filename='oct_image/'+file.filename)
-        }
-        return render_template("home.html", categories=categories, accuracy=str(accuracy), oct_image=oct_image)
+        return render_template("home.html", classes=classes, accuracy=str(accuracy), oct_images=oct_images)
 
     if request.method  == 'POST':
 
-        diagnosis={}
+        # define request content
+        urls=[]
+        for url in request.form.getlist('oct_image') :
+            urls.append(('file', open('web/'+url, 'rb')))
 
         if 'diagnose' in request.form:
 
             # send image to api for diagnosis
             r = requests.post(
                 url='http://127.0.0.1:5000/api', 
-                files = {
-                    'file': open('web/'+request.form.get('diagnose'),'rb')
-                })
+                files = urls,
+                )
             
             # return diagnosis if response is True (status code under 400)
+            diagnosis = []
             diagnosis = r.json().get('diagnosis') if r.ok else ''
-            if diagnosis != '':
-                diagnosis['url'] = url_for('static', filename='oct_image/'+diagnosis.get('filename'))
+            if len(diagnosis) > 0 :
+                for i in range(0,len(diagnosis)):
+                    diagnosis[i].update({'url': url_for('static', filename='oct_image/'+diagnosis[i].get('filename'))})
+                    diagnosis[i].update({'style': 'color:'+ str(get_color(int(diagnosis[i].get('result')))) })
+            print(diagnosis)
             
-            return render_template("home.html", categories=categories, accuracy=str(accuracy), diagnosis=diagnosis)
+            return render_template("home.html", classes=classes, accuracy=str(accuracy), diagnosis=diagnosis)
 
-    return render_template("home.html", categories=categories, accuracy=str(accuracy))
+    return render_template("home.html", classes=classes, accuracy=str(accuracy))
 
 
 

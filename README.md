@@ -14,6 +14,51 @@
 
 ### 3. Access web app with navigator
 
-- website : 'http:localhost:5000/'
+<code> GET http:127.0.0.1:5000/</code>
 
-- api : 'http:localhost:5000/api'
+1. First browse local directory to select one or many OCT images, open
+
+2. Then click "Upload" button, to load images on web server
+
+3. Finally click "Diagnose" button to get results
+
+
+### 4. Consumming API
+
+<code>GET http:127.0.0.1:5000/api</code>
+
+1. Get model architecture
+
+    HTTP Request : <code>GET http:127.0.0.1:5000/api/model</code>
+
+2. Get model metrics
+
+    HTTP Request : <code>GET http:127.0.0.1:5000/api/metrics</code>
+
+3. Get model classes
+
+    HTTP Request : <code>GET http:127.0.0.1:5000/api/classes</code>
+
+4. Get diagnosis
+
+    HTTP Request : <code>POST http:127.0.0.1:5000/api</code>
+
+    Query parameters :
+
+    | Type | Params | Values |
+    --------------------------
+    | POST | files | a list of dict like '{'file': <file>} |
+
+
+    Response
+
+    | Status | Response |
+    --------------------------
+    | 200 | { "diagnosis": [
+                {
+                    "filename": <string>,
+                    "result": <integer>,
+                    "classes":<string>
+                }
+            ]} |
+

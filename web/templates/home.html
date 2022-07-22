@@ -18,53 +18,84 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     </head>
 
-    <body class="main_container">
+    <body>
         
-        <header class="">
+        <header>
             <img id="logo" src="{{ url_for('static', filename='img/eye.jpg') }}" alt="logo">
             <h1 class="">RetinAI</h1>
         </header>
 
         <main class="container">
+
             <h2>Retinal Diagnosis by Image-Based Deep Learning</h2>
-            <p class="cat">This CNN can classify OCT images in 4 categories :
-                {% for category in categories %}{{category}}, {% endfor %}
+            <p class="note">This CNN can classify OCT images in 4 classes :
+                {% for classe in classes %}<strong>{{classe}}</strong>, {% endfor %}
             </p>
 
+            <!-- left column : upload images-->
             <div class="col col-left">
-                <h3>1. Upload an OCT image</h3>
+                <h3>1. Upload OCT images</h3>
 
                 <form enctype ="multipart/form-data" action="" method="post" class="form" id="upload">
                     <label for="oct_file" id="browser">                   
                         <input type="file"
-                        id="oct_file" name="oct_file"
-                        accept="image/png, image/jpeg" title="Please select JPEG or PNG file" placeholder="">
+                        id="oct_file" 
+                        name="oct_file"
+                        accept="image/png, image/jpeg" 
+                        title="Please select JPEG or PNG file"
+                        multiple
+                        placeholder="">
                     </label>
                     <button id="btn_upload" class="btn" type="submit">Upload</button>
                 </form>
                 
                 <div class="image">
-                    {% if oct_image %}
-                    {{oct_image.name}}
-                    <img id="oct_image" src="{{oct_image.url}}" alt="{{oct_image.name}}">
-                    {% endif %}
+                    <div class="oct_image_grid">
+                        {% if oct_images %}
+                        {% for oct_image in oct_images %}
+                        <div>
+                            {{oct_image.name}}
+                            <img id="oct_image" src="{{oct_image.url}}" alt="{{oct_image.name}}">
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
                 </div>
             </div>
-
+            
+            <!-- right column : diagnosis -->
             <div id="diagnose" class="col col-right reduce-grid regular-grid">
-                <h3>2. Get a diagnosis</h3>
+                <h3>2. Get diagnoses</h3>
+
                 <form action="" method="post" class="form">
-                    {% if oct_image %}
-                    <input type="hidden" name="diagnose" value="{{oct_image.url}}">
+                    {% if oct_images %}
+                    <input 
+                        type="hidden" 
+                        name="diagnose">
+                    {% for oct_image in oct_images %}
+                    <input 
+                        type="hidden" 
+                        name="oct_image" 
+                        value="{{oct_image.url}}">
+                    {% endfor %}
                     {% endif %}
                     <button id="btn_diagnose" class="btn" type="submit">Diagnose</button>
                 </form>
-                <div class="diagnosis">
-                    {% if diagnosis %}
-                    <div>Result : <span>{{diagnosis.result + ' RETINA'}}</span></div>
-                    <div>Filename : <span>{{diagnosis.filename}}</span></div>
-                    <img id="oct_image_diagnose" src="{{diagnosis.url}}" alt="{{diagnosis.filename}}">
-                    {% endif %}
+
+                <div class="image">
+                    <div class="oct_image_grid">
+                        {% if diagnosis %}
+                        {% for d in diagnosis %}
+                        <div>
+                            <div class="result">
+                                <strong>Classe :</strong><span style="{{d.style}}">{{d.classe + ' retina'}}</span>
+                                <strong>Filename :</strong><span>{{d.filename}}</span>
+                            </div>
+                            <img id="oct_image_diagnose" src="{{d.url}}" alt="{{d.filename}}">
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
                 </div>
             </div>
 
