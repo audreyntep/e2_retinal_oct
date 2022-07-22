@@ -1,12 +1,13 @@
 # RetinAI web application
 ## Retinal Diagnosis by Image-Based Deep Learning
 
+Windows configuration
 
 ### 1. Install dependencies
 
 <code>pip install requirements.txt</code>
 
-### 2. Launch flask server with powershell
+### 2. Launch flask local server with Powershell
 
 <code>$ env:FLASK_APP= "main"</code>
 
@@ -29,36 +30,31 @@
 
 1. Get model architecture
 
-    HTTP Request : <code>GET http:127.0.0.1:5000/api/model</code>
+    <code>GET http:127.0.0.1:5000/api/model</code>
 
 2. Get model metrics
 
-    HTTP Request : <code>GET http:127.0.0.1:5000/api/metrics</code>
+    <code>GET http:127.0.0.1:5000/api/metrics</code>
 
 3. Get model classes
 
-    HTTP Request : <code>GET http:127.0.0.1:5000/api/classes</code>
+    <code>GET http:127.0.0.1:5000/api/classes</code>
 
 4. Get diagnosis
 
-    HTTP Request : <code>POST http:127.0.0.1:5000/api</code>
+    <code>POST http:127.0.0.1:5000/api</code>
 
     Query parameters :
 
     | Type | Params | Values |
-    --------------------------
-    | POST | files | a list of dict like '{'file': <file>} |
+    |:-----|:-------|:-------|
+    | POST | files | [{'file': <file1>}, {'file': <file2>}] |
 
 
-    Response
+    Response :
 
     | Status | Response |
-    --------------------------
-    | 200 | { "diagnosis": [
-                {
-                    "filename": <string>,
-                    "result": <integer>,
-                    "classes":<string>
-                }
-            ]} |
+    |:-----|:-------|
+    | 200 | { "diagnosis": [{"filename": <string>,"result": <integer>,"classes":<string>}] } |
+    | 204 | File not found or no file received |
 
