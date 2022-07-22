@@ -1,5 +1,4 @@
 from re import U
-import os
 from flask import Flask, Blueprint, render_template, request, url_for
 import requests
 from PIL import Image
@@ -92,7 +91,6 @@ def home():
                 for i in range(0,len(diagnosis)):
                     diagnosis[i].update({'url': url_for('static', filename='oct_image/'+diagnosis[i].get('filename'))})
                     diagnosis[i].update({'style': 'color:'+ str(get_color(int(diagnosis[i].get('result')))) })
-            print(diagnosis)
             
             return render_template("home.html", classes=classes, accuracy=str(accuracy), diagnosis=diagnosis)
 

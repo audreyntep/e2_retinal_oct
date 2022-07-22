@@ -1,6 +1,5 @@
 import os, json
 from re import I
-from json import JSONEncoder
 import numpy as np
 import tensorflow as tf
 from PIL import Image
@@ -28,6 +27,7 @@ def create_app():
     api.add_resource(Diagnosis, '/classes')
 
     return app
+
 
 class Metrics(Resource):
 
@@ -101,6 +101,7 @@ class Diagnosis(Resource):
     def predict_result(self,img):
         Y_pred = Model().load_model().predict(img)
         return np.argmax(Y_pred, axis=1)
+
 
     # Filestorage as input, return dict
     def get_result(self, file):

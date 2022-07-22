@@ -1,4 +1,4 @@
-# RetinAI web application
+# RetinAI web application - MedTech by Audrey Ntep
 ## Retinal Diagnosis by Image-Based Deep Learning
 
 Windows configuration
@@ -21,7 +21,13 @@ Windows configuration
 
 2. Then click "Upload" button, to load images on web server
 
-3. Finally click "Diagnose" button to get results
+3. Finally click "Diagnose" button to get results :
+
+    - CNV and DME retinas are red
+
+    - Drusen retina is orange
+
+    - Normal retina is green
 
 
 ### 4. Consumming API
@@ -44,17 +50,24 @@ Windows configuration
 
     <code>POST http:127.0.0.1:5000/api</code>
 
-    Query parameters :
+    **Query parameters :**
 
     | Type | Params | Values |
     |:-----|:-------|:-------|
     | POST | files | [{'file': *< file1 >*}, {'file': *< file2 >*}] |
 
 
-    Response :
+    **Response :**
 
     | Status | Response |
     |:-----|:-------|
     | 200 | { "diagnosis": [{"filename": *< string >*,"result": *< integer >*,"classes":*< string >*}] } |
     | 204 | File not found or no file received |
 
+
+
+### 5. Data storage
+
+OCT image files are temporary stored in web app server : <code>'/static/oct_image'</code>
+
+OCT image files are temporary stored in api server : <code>'/data'</code>
