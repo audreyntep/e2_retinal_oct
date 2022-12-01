@@ -131,6 +131,9 @@ h3 {
 }
 
 /* grid image elements*/
+.oct_image {
+  width: 300px;
+}
 
 .oct_image_grid {
   display: grid;
@@ -153,8 +156,6 @@ h3 {
 }
 .image img {
   border-radius: 5px;
-  width:100%;
-  height: auto;
 }
 .col-right .image {
   width: 80%;

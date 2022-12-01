@@ -1,4 +1,3 @@
-from re import U
 from flask import Flask, Blueprint, render_template, request, url_for
 import requests
 from PIL import Image
@@ -52,10 +51,10 @@ def home():
 
     # prepare file
     if 'oct_file' in request.files and request.files.get('oct_file'):
-
+        print('ok oct file')
         files = request.files.getlist('oct_file')
         oct_images = []
-
+        print(files)
         for file in files:
             # open image
             img = Image.open(file.stream)

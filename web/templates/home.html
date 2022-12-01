@@ -55,7 +55,7 @@
                         {% for oct_image in oct_images %}
                         <div>
                             {{oct_image.name}}
-                            <img id="oct_image" src="{{oct_image.url}}" alt="{{oct_image.name}}">
+                            <img class="oct_image" src="{{oct_image.url}}" alt="{{oct_image.name}}">
                         </div>
                         {% endfor %}
                         {% endif %}
@@ -91,7 +91,7 @@
                                 <strong>Classe :</strong><span style="{{d.style}}">{{d.classe + ' retina'}}</span>
                                 <strong>Filename :</strong><span>{{d.filename}}</span>
                             </div>
-                            <img id="oct_image_diagnose" src="{{d.url}}" alt="{{d.filename}}">
+                            <img class="oct_image" src="{{d.url}}" alt="{{d.filename}}">
                         </div>
                         {% endfor %}
                         {% endif %}

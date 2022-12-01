@@ -1,0 +1,40 @@
+openapi: '3.0.2'
+info:
+  title: Image Based Deep Learning Retinal Diagnosis
+  version: '1.0'
+servers:
+  - url: http://127.0.0.1:5000/api/
+paths:
+  /model:
+    get:
+      responses:
+        '200':
+          description: returns JSON model specifications
+  /metrics:
+    get:
+      responses:
+        '200':
+          description: returns JSON model's metrics (loss and accuracy)
+  /classes:
+    get:
+      responses:
+        '200':
+          description: returns JSON model's classes
+  /:
+    post:
+      description: ''
+      requestBody:
+        content:
+          image/png:
+            schema:
+              type: string
+              format: binary
+          image/jpeg:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '200':
+          description: OK
+        '204':
+          description: No image found
