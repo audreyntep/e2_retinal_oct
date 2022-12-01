@@ -22,7 +22,7 @@ paths:
           description: returns JSON model's classes
   /:
     post:
-      description: ''
+      description: return JSON model's predictions on files sent in body
       requestBody:
         content:
           image/png:
@@ -35,6 +35,6 @@ paths:
               format: binary
       responses:
         '200':
-          description: OK
+          description: Prediction success
         '204':
           description: No image found

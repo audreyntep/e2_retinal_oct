@@ -51,10 +51,10 @@ def home():
 
     # prepare file
     if 'oct_file' in request.files and request.files.get('oct_file'):
-        print('ok oct file')
+
         files = request.files.getlist('oct_file')
         oct_images = []
-        print(files)
+
         for file in files:
             # open image
             img = Image.open(file.stream)
@@ -73,7 +73,7 @@ def home():
         # define request content
         urls=[]
         for url in request.form.getlist('oct_image') :
-            urls.append(('file', open('web/'+url, 'rb')))
+            urls.append(('file', open('web'+url, 'rb')))
 
         if 'diagnose' in request.form:
 

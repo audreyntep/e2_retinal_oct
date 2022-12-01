@@ -35,11 +35,13 @@ Windows configuration
 
 ### 4. Consumming API
 
-    See openAPI.yml file
+See openAPI.yml file
 
 
 ### 5. Data storage
 
-OCT image files are temporary stored in web app server : <code>'/static/oct_image'</code>
+OCT image files are temporary stored in web app server directory : <code>'/static/oct_image'</code>
 
-OCT image files are temporary stored in api server : <code>'/data'</code>
+OCT image files are temporary stored in api server directory : <code>'/data'</code>
+
+Directories are cleared when app is closed.

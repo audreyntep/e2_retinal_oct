@@ -1,5 +1,4 @@
 import os, json
-from re import I
 import numpy as np
 import tensorflow as tf
 from PIL import Image
@@ -82,6 +81,7 @@ class Diagnosis(Resource):
 
         # open image
         img = Image.open(file.stream)
+
         # save image
         img.save(img_path)
         # load image
