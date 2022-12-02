@@ -53,6 +53,7 @@ def home():
     if 'oct_file' in request.files and request.files.get('oct_file'):
 
         files = request.files.getlist('oct_file')
+
         oct_images = []
 
         for file in files:
@@ -70,19 +71,22 @@ def home():
 
     if request.method  == 'POST':
 
-        # define request content
-        urls=[]
-        for url in request.form.getlist('oct_image') :
-            urls.append(('file', open('web'+url, 'rb')))
-
         if 'diagnose' in request.form:
+
+            # define request content
+            urls=[]
+            for url in request.form.getlist('oct_image') :
+                urls.append(('file', open('web'+url, 'rb')))
+
+            # TODO for testing purpose 
+            if len(urls) == 0:
+                urls.append(('file', open('test_data/CNV-103044-5.jpeg', 'rb')))
 
             # send image to api for diagnosis
             r = requests.post(
                 url='http://127.0.0.1:5000/api', 
                 files = urls,
                 )
-            
             # return diagnosis if response is True (status code under 400)
             diagnosis = []
             diagnosis = r.json().get('diagnosis') if r.ok else ''

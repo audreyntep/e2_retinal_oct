@@ -107,6 +107,7 @@ class Diagnosis(Resource):
     def get_result(self, file):
         # parameter byte object
         img = self.prepare_image(file)
+
         # transform result nd numpy array to list
         result = np.ndarray.tolist(self.predict_result(img))
 
@@ -140,7 +141,7 @@ class Prediction(Resource):
 
         for f in files :
             diagnoses.append(Diagnosis().get_result(f))
-
+        print(diagnoses)
         # return diagnosis as json
         return jsonify(diagnosis=diagnoses)
     

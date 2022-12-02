@@ -23,18 +23,14 @@ paths:
   /:
     post:
       description: return JSON model's predictions on files sent in body
-      requestBody:
-        content:
-          image/png:
-            schema:
-              type: string
-              format: binary
-          image/jpeg:
-            schema:
-              type: string
-              format: binary
       responses:
-        '200':
-          description: Prediction success
-        '204':
+        '200': 
+          description: Ok
+          content:
+            text/plain:
+              schema:
+                type: array
+                example: [{'filename': 'CNV-103044-5.jpeg', 'result': '0', 'classe': 'choroidal neovascularization (CNV)'}]
+        '204' : 
           description: No image found
+
