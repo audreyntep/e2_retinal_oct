@@ -5,6 +5,10 @@ from PIL import Image
 views = Blueprint('views', __name__)
 
 def create_app():
+    """This function returns a Flask object
+        Returns:
+            _type_: Flask
+    """
     app = Flask('web')
 
     # Config flask app
@@ -16,6 +20,10 @@ def create_app():
     return app
 
 def get_model():
+    """This function returns the model from api
+        Returns:
+            _type_: json
+    """
     r = requests.get(url='http://127.0.0.1:5000/api/model')
     return r.json()
 
@@ -49,7 +57,7 @@ def home():
     # get CNN accuracy
     accuracy=round(get_metrics().get('accuracy')*100,2)
 
-    # prepare file
+    # when submitting 'upload' form with GET method : prepare file
     if 'oct_file' in request.files and request.files.get('oct_file'):
 
         files = request.files.getlist('oct_file')
@@ -69,6 +77,7 @@ def home():
 
         return render_template("home.html", classes=classes, accuracy=str(accuracy), oct_images=oct_images)
 
+    # when submitting 'diagnose' form with POST method : call API for prediction
     if request.method  == 'POST':
 
         if 'diagnose' in request.form:
@@ -79,12 +88,12 @@ def home():
                 urls.append(('file', open('web'+url, 'rb')))
 
             # TODO for testing purpose 
-            if len(urls) == 0:
-                urls.append(('file', open('test_data/CNV-103044-5.jpeg', 'rb')))
+            # if len(urls) == 0:
+            #     urls.append(('file', open('test_data/CNV-103044-5.jpeg', 'rb')))
 
             # send image to api for diagnosis
             r = requests.post(
-                url='http://127.0.0.1:5000/api', 
+                url='http://127.0.0.1:5000/api/predict', 
                 files = urls,
                 )
             # return diagnosis if response is True (status code under 400)
@@ -98,6 +107,3 @@ def home():
             return render_template("home.html", classes=classes, accuracy=str(accuracy), diagnosis=diagnosis)
 
     return render_template("home.html", classes=classes, accuracy=str(accuracy))
-
-
-

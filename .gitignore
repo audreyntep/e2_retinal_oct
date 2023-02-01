@@ -1,6 +1,7 @@
 # app data folders
 web/static/oct_image/*
 api/data/*
+api/.old
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

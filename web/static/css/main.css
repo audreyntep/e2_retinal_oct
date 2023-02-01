@@ -76,8 +76,9 @@ h2 {
   grid-row: 4;
   color:crimson;
   padding: 10px;
-  text-align: right;
+  text-align: center;
   font-style: italic;
+  padding-top: 30px;
 }
 
 .col {
@@ -143,11 +144,11 @@ h3 {
 .oct_image_grid div {
   display: flex;
   width: 100%;
+  flex-direction: column;
 }
 
 .image {
   grid-row: 3/-1;
-  width: 50%;
   margin: 10px;
   color: black;
   display: flex;

@@ -67,7 +67,7 @@
             <div id="diagnose" class="col col-right reduce-grid regular-grid">
                 <h3>2. Get diagnoses</h3>
 
-                <form action="" method="post" class="form">
+                <form action="" method="post" class="form" id="diagnose">
 
                     <!--TODO for testing purpose-->
                     <input type="hidden" name="diagnose">
@@ -92,8 +92,8 @@
                         {% for d in diagnosis %}
                         <div>
                             <div class="result">
-                                <strong>Classe :</strong><span style="{{d.style}}">{{d.classe + ' retina'}}</span>
                                 <strong>Filename :</strong><span>{{d.filename}}</span>
+                                <strong>Classe :</strong><span style="{{d.style}}">{{d.classe + ' retina'}}</span>
                             </div>
                             <img class="oct_image" src="{{d.url}}" alt="{{d.filename}}">
                         </div>
@@ -104,8 +104,9 @@
             </div>
 
             <p class="caution">
-                <strong>Caution : </strong>
-                This diagnosis must be considered with care. It is accurate at {{accuracy}}% and should always be confirmed by human observation.
+                <strong>Disclaimer</strong> <br>
+                This result has {{accuracy}}% accuracy and must be considered with care. <br>
+                A diagnosis must always be carried out by a professional.
             </p>
 
         </main>

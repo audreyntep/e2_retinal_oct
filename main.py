@@ -14,11 +14,11 @@ app_web = create_app_website()
 app_api = create_app_api()
 apps = DispatcherMiddleware(app_web, {'/api': app_api})
 
-# Lancement de l'application
+# Run flask multithreading
 if __name__ == '__main__':
     
-    # clear image file directories
-    for root, dirs, files in os.walk("api/data"):
+    # clear image files uploaded in app and api directories
+    for root, dirs, files in os.walk("api/data/diagnoses/"):
         for file in files:
             os.remove(os.path.join(root, file))
     for root, dirs, files in os.walk("web/static/oct_image"):

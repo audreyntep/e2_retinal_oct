@@ -20,7 +20,8 @@ def create_app():
     api = Api(app)
 
     # Define route with Resource
-    api.add_resource(Prediction, '/')
+    api.add_resource(Home, '/')
+    api.add_resource(Prediction, '/predict')
     api.add_resource(Model, '/model')
     api.add_resource(Metrics, '/metrics')
     api.add_resource(Diagnosis, '/classes')
@@ -28,6 +29,13 @@ def create_app():
     return app
 
 
+# '/'
+class Home(Resource):
+
+    def get(self):
+        return 'Retinal OCT prediction API'
+
+# '/metrics'
 class Metrics(Resource):
 
     # return json
@@ -35,7 +43,7 @@ class Metrics(Resource):
         data = open(os.getcwd()+'/api/model/'+model_name+'/retinal_oct_model_'+model_name+'_eval.json')
         return json.load(data)
     
-
+# '/model'
 class Model(Resource):
 
     # model paths
@@ -58,7 +66,7 @@ class Model(Resource):
         return json.load(data)
 
 
-
+# '/classes'
 class Diagnosis(Resource):
 
     classes = {
@@ -77,7 +85,7 @@ class Diagnosis(Resource):
     def prepare_image(self, file):
 
         self.filename = file.filename
-        img_path = 'api/data/'+self.filename
+        img_path = 'api/data/diagnoses/'+self.filename
 
         # open image
         img = Image.open(file.stream)
@@ -89,11 +97,6 @@ class Diagnosis(Resource):
         # resize image
         img = tf.keras.utils.img_to_array(img)
         img = np.expand_dims(img, axis = 0)
- 
-        #img = Image.open(io.BytesIO(img))
-        #img = img.resize((150, 150))
-        #img = np.array(img)
-        #img = np.expand_dims(img, axis = 0)
 
         return img
 
@@ -123,7 +126,7 @@ class Diagnosis(Resource):
         return jsonify(self.classes)
 
 
-# POST methode retourne un diagnostic
+# '/predict' POST methode retourne un diagnostic
 class Prediction(Resource):
 
     # POST method retun diagnosis in json
@@ -150,3 +153,12 @@ class Prediction(Resource):
     def get(self):
         return 'Retinal Diagnosis by Image-Based Deep Learning'
         
+
+
+
+    
+
+
+
+
+
