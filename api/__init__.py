@@ -21,7 +21,7 @@ def create_app():
 
     # Define route with Resource
     api.add_resource(Home, '/')
-    api.add_resource(Prediction, '/predict')
+    api.add_resource(Prediction, '/diagnosis')
     api.add_resource(Model, '/model')
     api.add_resource(Metrics, '/metrics')
     api.add_resource(Diagnosis, '/classes')
@@ -126,7 +126,7 @@ class Diagnosis(Resource):
         return jsonify(self.classes)
 
 
-# '/predict' POST methode retourne un diagnostic
+# '/diagnosis' POST methode retourne un diagnostic
 class Prediction(Resource):
 
     # POST method retun diagnosis in json
@@ -153,12 +153,3 @@ class Prediction(Resource):
     def get(self):
         return 'Retinal Diagnosis by Image-Based Deep Learning'
         
-
-
-
-    
-
-
-
-
-

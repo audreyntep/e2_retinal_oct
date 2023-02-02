@@ -93,7 +93,7 @@ def home():
 
             # send image to api for diagnosis
             r = requests.post(
-                url='http://127.0.0.1:5000/api/predict', 
+                url='http://127.0.0.1:5000/api/diagnosis', 
                 files = urls,
                 )
             # return diagnosis if response is True (status code under 400)

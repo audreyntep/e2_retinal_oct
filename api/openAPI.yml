@@ -20,7 +20,7 @@ paths:
       responses:
         '200':
           description: returns JSON model's classes
-  /:
+  /diagnosis:
     post:
       description: return JSON model's predictions on files sent in body
       responses:
