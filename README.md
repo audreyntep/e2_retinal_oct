@@ -44,4 +44,4 @@ OCT image files are temporary stored in web app server directory : <code>'/stati
 
 OCT image files are temporary stored in api server directory : <code>'/data'</code>
 
-Directories are cleared when app is closed.
+Directories are cleared when server is shut down.
