@@ -1,10 +1,12 @@
-import setuptools
 import os
 from web import create_app as create_app_website
 from api import create_app as create_app_api
 from api.old.app import app
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
 from werkzeug.serving import run_simple
+
+
+
 
 # modifie le type MIME des scripts js (remplace "text/plain")
 import mimetypes

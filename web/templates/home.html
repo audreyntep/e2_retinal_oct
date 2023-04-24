@@ -92,8 +92,8 @@
                         {% for d in diagnosis %}
                         <div>
                             <div class="result">
-                                <strong>Filename :</strong><span>{{d.filename}}</span>
                                 <strong>Classe :</strong><span style="{{d.style}}">{{d.classe + ' retina'}}</span>
+                                <strong>Exactitude :</strong><span>{{accuracy}} %</span>
                             </div>
                             <img class="oct_image" src="{{d.url}}" alt="{{d.filename}}">
                         </div>
