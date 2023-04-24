@@ -1,7 +1,8 @@
 # app data folders
 web/static/oct_image/*
 api/data/*
-
+*.h5
+checkpoint*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
