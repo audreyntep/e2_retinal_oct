@@ -35,7 +35,12 @@ Windows configuration
 
 ### 4. Consumming API
 
-See openAPI.yml file
+| Endpoint | Method | Result |
+| --- | --- | ----- |
+| /diagnosis | POST  | JSON prediction  |
+| /model | GET  | JSON model |
+| /metrics | GET  | JSON metrics |
+| /classes | GET  | JSON classses |
 
 
 ### 5. Data storage

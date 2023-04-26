@@ -74,7 +74,7 @@ def home():
                 'name': file.filename,
                 'url' : url_for('static', filename='oct_image/'+file.filename)
             })
-
+            print(len(oct_images))
         return render_template("home.html", classes=classes, accuracy=str(accuracy), oct_images=oct_images)
 
     # when submitting 'diagnose' form with POST method : call API for prediction

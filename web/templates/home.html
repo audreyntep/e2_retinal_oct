@@ -52,12 +52,11 @@
                 <div class="image">
                     <div class="oct_image_grid">
                         {% if oct_images %}
+                        <ol>
                         {% for oct_image in oct_images %}
-                        <div>
-                            {{oct_image.name}}
-                            <img class="oct_image" src="{{oct_image.url}}" alt="{{oct_image.name}}">
-                        </div>
+                            <li>{{oct_image.name}}</li>
                         {% endfor %}
+                        </ol>
                         {% endif %}
                     </div>
                 </div>
@@ -92,8 +91,7 @@
                         {% for d in diagnosis %}
                         <div>
                             <div class="result">
-                                <strong>Classe :</strong><span style="{{d.style}}">{{d.classe + ' retina'}}</span>
-                                <strong>Exactitude :</strong><span>{{accuracy}} %</span>
+                                <span style="{{d.style}}">{{d.classe + ' retina'}}</span> with {{accuracy}} % accuracy
                             </div>
                             <img class="oct_image" src="{{d.url}}" alt="{{d.filename}}">
                         </div>
@@ -105,7 +103,7 @@
 
             <p class="caution">
                 <strong>Disclaimer</strong> <br>
-                This result has {{accuracy}}% accuracy and must be considered with care. <br>
+                This result must be considered with care. <br>
                 A diagnosis must always be carried out by a professional.
             </p>
 
