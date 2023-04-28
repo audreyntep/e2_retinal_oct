@@ -7,7 +7,8 @@ from flask_restful import Api, Resource
 
 # define model to use
 global model_name
-model_name = 'vE10-B64'
+#model_name = 'vE10-B64'
+model_name = 'vgg16_e10b64_6'
 
 def create_app():
     app = Flask('api')
