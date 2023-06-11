@@ -26,8 +26,9 @@ grpcio==1.51.1
 h5py==3.8.0
 idna==3.4
 imageio==2.25.0
+imbalanced-learn==0.10.1
 ipykernel==6.20.2
-ipython==8.10
+ipython==8.9.0
 itsdangerous==2.1.2
 jedi==0.18.2
 Jinja2==3.1.2
@@ -46,6 +47,7 @@ nest-asyncio==1.5.6
 networkx==3.0
 numpy==1.24.1
 oauthlib==3.2.2
+opencv-python==4.7.0.72
 opt-einsum==3.3.0
 packaging==23.0
 pandas==1.5.3
@@ -78,7 +80,7 @@ stack-data==0.6.2
 tensorboard==2.11.2
 tensorboard-data-server==0.6.1
 tensorboard-plugin-wit==1.8.1
-tensorflow==2.11.1
+tensorflow==2.11.0
 tensorflow-estimator==2.11.0
 tensorflow-intel==2.11.0
 tensorflow-io-gcs-filesystem==0.30.0
@@ -90,5 +92,5 @@ traitlets==5.9.0
 typing_extensions==4.4.0
 urllib3==1.26.14
 wcwidth==0.2.6
-Werkzeug==2.2.3
+Werkzeug==2.2.2
 wrapt==1.14.1

@@ -4,6 +4,9 @@ import tensorflow as tf
 from PIL import Image
 from flask import Flask, jsonify, request
 from flask_restful import Api, Resource
+from werkzeug.datastructures import FileStorage
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 # define model to use
 global model_name
@@ -11,6 +14,7 @@ global model_name
 model_name = 'vgg16_e10b64_6'
 
 def create_app():
+    global app
     app = Flask('api')
 
     # Config flask app
@@ -23,7 +27,7 @@ def create_app():
     # Define route with Resource
     api.add_resource(Home, '/')
     api.add_resource(Prediction, '/diagnosis')
-    api.add_resource(Model, '/model')
+    api.add_resource(ModelLoader, '/model')
     api.add_resource(Metrics, '/metrics')
     api.add_resource(Diagnosis, '/classes')
 
@@ -45,22 +49,25 @@ class Metrics(Resource):
         return json.load(data)
     
 # '/model'
-class Model(Resource):
+class ModelLoader(Resource):
 
     # model paths
     model_h5_path = 'retinal_oct_model_'+model_name+'.h5'
     model_json_path = 'retinal_oct_model_'+model_name+'.json'
+    __model = None
 
     # return keras model
-    def load_model(self):
+    def __init__(self):
         # getting h5 path
         model_h5 = os.getcwd()+'/api/model/'+model_name+'/'+self.model_h5_path
         # loading model with kears
-        model = tf.keras.models.load_model(model_h5)
-        model.compile(optimizer = 'adam', loss = 'categorical_crossentropy', metrics = ['accuracy'])
+        self.__model = tf.keras.models.load_model(model_h5)
+        self.__model.compile(optimizer = 'adam', loss = 'categorical_crossentropy', metrics = ['accuracy'])
 
-        return model
-
+    # return prediction
+    def predict(self, img):
+        return self.__model.predict(img)
+    
     # return json
     def get(self):
         data = open(os.getcwd()+'/api/model/'+model_name+'/'+self.model_json_path)
@@ -82,45 +89,39 @@ class Diagnosis(Resource):
     def get_filename(self):
         return self.filename
 
-    # Filestorage as input, Image object as output
-    def prepare_image(self, file):
-
-        self.filename = file.filename
-        img_path = 'api/data/diagnoses/'+self.filename
-
+    @staticmethod
+    def prepare_image(file):
+        filename = file.filename
+        img_path = os.path.join(os.getcwd(), 'api', 'data', 'diagnoses', filename)
         # open image
         img = Image.open(file.stream)
-
         # save image
         img.save(img_path)
         # load image
-        img = tf.keras.utils.load_img(img_path, target_size = (150, 150)) 
+        img = tf.keras.utils.load_img(img_path, target_size=(150, 150))
         # resize image
         img = tf.keras.utils.img_to_array(img)
-        img = np.expand_dims(img, axis = 0)
-
-        return img
-
-    # Image object as input, return numpy array prediction
-    def predict_result(self,img):
-        Y_pred = Model().load_model().predict(img)
-        return np.argmax(Y_pred, axis=1)
+        img = np.expand_dims(img, axis=0)
+        return img, filename
 
 
-    # Filestorage as input, return dict
-    def get_result(self, file):
+    @staticmethod
+    def get_result(file: FileStorage):
         # parameter byte object
-        img = self.prepare_image(file)
-
+        img, filename = Diagnosis.prepare_image(file)
+        # load model
+        model_loader = ModelLoader()
+        # predict
+        Y_pred = np.argmax(model_loader.predict(img), axis=1)
         # transform result nd numpy array to list
-        result = np.ndarray.tolist(self.predict_result(img))
+        result = np.ndarray.tolist(Y_pred)
 
         # format diagnosis
         return {
-            'filename': self.filename, 
+            'filename': filename,
             'result': json.dumps(result[0]),
-            'classe': self.classes.get(int(result[0]))
-            }
+            'classe': Diagnosis.classes.get(int(result[0]))
+        }
 
     # return json
     def get(self):
@@ -134,23 +135,21 @@ class Prediction(Resource):
     def post(self):
 
         diagnoses = []
+        try :
+            files = request.files.getlist('file')
+            # for each file get diagnosis
+            for file in files :
+                diagnoses.append(Diagnosis.get_result(file))
+            # return error if no image
+            if diagnoses == []:
+                return {400 : "No image found."}
+            # return diagnosis as json
+            return jsonify(diagnoses)
+        
+        except Exception as e:
+            print(e)
+            return {418 : "Please try again."}
 
-        # prepare file
-        if len(request.files.getlist('file')) < 1 :
-            return {204 : "Please try again. The Image doesn't exist"}
-        files = request.files.getlist('file')
 
-        if not files:
-            return {204 : "Please try again. The Image doesn't exist"}
-
-        for f in files :
-            diagnoses.append(Diagnosis().get_result(f))
-        print(diagnoses)
-        # return diagnosis as json
-        return jsonify(diagnosis=diagnoses)
     
-
-    # GET method return model architecture and metrics as json
-    def get(self):
-        return 'Retinal Diagnosis by Image-Based Deep Learning'
         
