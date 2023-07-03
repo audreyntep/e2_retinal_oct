@@ -19,7 +19,7 @@ def create_app():
 
     # Config flask app
     app.debug = True
-    app.config['SECRET_KEY'] = 'retinia'
+    app.config['SECRET_KEY'] = 'retina'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
     api = Api(app)
@@ -78,10 +78,10 @@ class ModelLoader(Resource):
 class Diagnosis(Resource):
 
     classes = {
-        0 :'choroidal neovascularization (CNV)', 
-        1 :'diabetic macular edema (DME)', 
-        2 :'drusen', 
-        3 :'normal'
+        0 :'CNV (choroidal neovascularization)', 
+        1 :'DME (diabetic macular edema)', 
+        2 :'DRUSEN', 
+        3 :'NORMAL'
     }
 
     filename = ''
@@ -115,7 +115,11 @@ class Diagnosis(Resource):
         Y_pred = np.argmax(model_loader.predict(img), axis=1)
         # transform result nd numpy array to list
         result = np.ndarray.tolist(Y_pred)
-
+        print({
+            'filename': filename,
+            'result': json.dumps(result[0]),
+            'classe': Diagnosis.classes.get(int(result[0]))
+        })
         # format diagnosis
         return {
             'filename': filename,

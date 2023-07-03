@@ -11,9 +11,9 @@ Windows configuration
 
 ### 2. Launch flask local server with Powershell
 
-<code>$ env:FLASK_APP= "main"</code>
+<code>$env:FLASK_APP = "main"</code>
 
-<code>$ flask run</code>
+<code>flask run</code>
 
 
 ### 3. Access web app with navigator
